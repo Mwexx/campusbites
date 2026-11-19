@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Bites | Cart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="site-header">
+            <div>
+                <h1>Campus Bites</h1>
+                <p>Fresh, affordable food at the University of Embu.</p>
+            </div>
+            <nav aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="products.html">Menu</a>
+                <a class="active" href="cart.html">Cart</a>
+                <a href="checkout.html">Checkout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-heading">
+            <p class="eyebrow">Almost there</p>
+            <h2>Your Shopping Cart</h2>
+            <p>Review your items before sharing your delivery details.</p>
+        </section>
+        <div class="cart-panel">
+            <ul id="cartItems"></ul>
+            <p class="empty-message" id="emptyCart" hidden>Your cart is empty. <a class="text-link" href="products.html">Browse the menu</a></p>
+            <div class="cart-summary">
+                <strong id="cartTotal">Total: KSh 0</strong>
+                <button type="button" onclick="clearCart()">Clear Cart</button>
+            </div>
+            <a class="order-button" href="checkout.html">Proceed to Checkout</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Campus Bites | University of Embu</p>
+    </footer>
+
+    <script>
+        function getCart() {
+            return JSON.parse(localStorage.getItem("cart")) || [];
+        }
+
+        function displayCart() {
+            const cart = getCart();
+            const list = document.getElementById("cartItems");
+            let total = 0;
+            list.innerHTML = "";
+
+            cart.forEach((item, index) => {
+                total += item.price;
+                const row = document.createElement("li");
+                row.innerHTML = `<span>${item.name} <strong>KSh ${item.price}</strong></span>`;
+                const removeButton = document.createElement("button");
+                removeButton.type = "button";
+                removeButton.textContent = "Remove";
+                removeButton.onclick = () => removeItem(index);
+                row.appendChild(removeButton);
+                list.appendChild(row);
+            });
+
+            document.getElementById("cartTotal").textContent = `Total: KSh ${total}`;
+            document.getElementById("emptyCart").hidden = cart.length !== 0;
+            document.querySelector(".cart-summary button").disabled = cart.length === 0;
+        }
+
+        function removeItem(index) {
+            const cart = getCart();
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            displayCart();
+        }
+
+        function clearCart() {
+            localStorage.removeItem("cart");
+            displayCart();
+        }
+
+        displayCart();
+    </script>
+</body>
+</html>

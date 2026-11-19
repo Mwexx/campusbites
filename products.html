@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Bites | Menu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="site-header">
+            <div>
+                <h1>Campus Bites</h1>
+                <p>Fresh, affordable food at the University of Embu.</p>
+            </div>
+            <nav aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a class="active" href="products.html">Menu</a>
+                <a href="cart.html">Cart</a>
+                <a href="checkout.html">Checkout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-heading">
+            <p class="eyebrow">Choose your meal</p>
+            <h2>Our Menu</h2>
+            <p>Affordable favourites for students, lecturers and staff.</p>
+        </section>
+
+        <div class="menu-tools">
+            <label for="searchInput">Search the menu</label>
+            <input type="search" id="searchInput" placeholder="e.g. burger" oninput="filterFood()">
+            <div class="categories" aria-label="Menu categories">
+                <button type="button" class="category-button selected" onclick="filterCategory('all', this)">All</button>
+                <button type="button" class="category-button" onclick="filterCategory('burger', this)">Burgers</button>
+                <button type="button" class="category-button" onclick="filterCategory('pizza', this)">Pizza</button>
+                <button type="button" class="category-button" onclick="filterCategory('snack', this)">Snacks</button>
+            </div>
+        </div>
+
+        <div class="food-container" id="foodList">
+            <article class="food-card" data-category="burger">
+                <img src="Images/burger.jpg" alt="Beef burger">
+                <h3>Beef Burger</h3>
+                <p>Juicy beef burger with fresh vegetables and sauce.</p>
+                <p class="price">KSh 250</p>
+                <button type="button" onclick="addToCart('Beef Burger', 250)">Add to Cart</button>
+            </article>
+            <article class="food-card" data-category="pizza">
+                <img src="Images/pizza.jpg" alt="Pizza">
+                <h3>Pizza</h3>
+                <p>A tasty, filling choice for your lunch break.</p>
+                <p class="price">KSh 400</p>
+                <button type="button" onclick="addToCart('Pizza', 400)">Add to Cart</button>
+            </article>
+            <article class="food-card" data-category="snack">
+                <img src="Images/chips.jpg" alt="Crispy chips">
+                <h3>Chips</h3>
+                <p>Crispy chips to enjoy any time of day.</p>
+                <p class="price">KSh 150</p>
+                <button type="button" onclick="addToCart('Chips', 150)">Add to Cart</button>
+            </article>
+        </div>
+        <p class="empty-message" id="emptyMessage" hidden>No menu items match your search.</p>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Campus Bites | University of Embu</p>
+    </footer>
+
+    <script>
+        let selectedCategory = "all";
+
+        function addToCart(name, price) {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.push({ name, price });
+            localStorage.setItem("cart", JSON.stringify(cart));
+            window.location.href = "cart.html";
+        }
+
+        function filterCategory(category, button) {
+            selectedCategory = category;
+            document.querySelectorAll(".category-button").forEach((item) => item.classList.remove("selected"));
+            button.classList.add("selected");
+            filterFood();
+        }
+
+        function filterFood() {
+            const search = document.getElementById("searchInput").value.toLowerCase().trim();
+            const cards = document.querySelectorAll(".food-card");
+            let visible = 0;
+
+            cards.forEach((card) => {
+                const matchesCategory = selectedCategory === "all" || card.dataset.category === selectedCategory;
+                const matchesSearch = card.querySelector("h3").textContent.toLowerCase().includes(search);
+                card.hidden = !(matchesCategory && matchesSearch);
+                if (!card.hidden) visible++;
+            });
+
+            document.getElementById("emptyMessage").hidden = visible !== 0;
+        }
+    </script>
+</body>
+</html>

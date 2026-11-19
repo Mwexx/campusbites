@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Bites | Checkout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="site-header">
+            <div>
+                <h1>Campus Bites</h1>
+                <p>Fresh, affordable food at the University of Embu.</p>
+            </div>
+            <nav aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <a href="products.html">Menu</a>
+                <a href="cart.html">Cart</a>
+                <a class="active" href="checkout.html">Checkout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-heading">
+            <p class="eyebrow">Simple and convenient</p>
+            <h2>Checkout</h2>
+            <p>Share your details and choose how you would like to pay.</p>
+        </section>
+        <form class="checkout-form" onsubmit="placeOrder(event)">
+            <label for="customerName">Customer name</label>
+            <input type="text" id="customerName" required>
+
+            <label for="phone">Phone number</label>
+            <input type="tel" id="phone" required>
+
+            <label for="location">Delivery location or collection point</label>
+            <input type="text" id="location" required>
+
+            <label for="payment">Payment method</label>
+            <select id="payment" required>
+                <option value="">Select a payment method</option>
+                <option>M-Pesa</option>
+                <option>Cash on delivery</option>
+                <option>Bank transfer</option>
+            </select>
+
+            <h3 id="orderTotal">Total: KSh 0</h3>
+            <button type="submit">Confirm Order</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Campus Bites | University of Embu</p>
+    </footer>
+
+    <script>
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        document.getElementById("orderTotal").textContent = `Total: KSh ${total}`;
+
+        function placeOrder(event) {
+            event.preventDefault();
+            if (cart.length === 0) {
+                alert("Your cart is empty. Please choose a meal first.");
+                window.location.href = "products.html";
+                return;
+            }
+
+            alert("Thank you! Your order has been received.");
+            localStorage.removeItem("cart");
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
